@@ -1,0 +1,189 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/hanken-grotesk";
+
+@theme inline {
+    --font-heading: var(--font-sans);
+    --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+    --color-slip: var(--slip);
+    --color-slip-line: var(--slip-line);
+    --color-slip-ink: var(--slip-ink);
+    --color-row-new: var(--row-new);
+    --color-row-modified: var(--row-modified);
+    --color-success: var(--success);
+    --color-success-soft: var(--success-soft);
+    --ease-out-strong: var(--ease-out);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* Einzahlungsschein world: warm paper, salmon slip, orange-red ink. Light only: used at a desk by day. */
+:root {
+    --background: oklch(0.982 0.006 70);
+    --foreground: oklch(0.24 0.025 40);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.24 0.025 40);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.24 0.025 40);
+    --primary: oklch(0.53 0.17 36);
+    --primary-foreground: oklch(0.99 0.005 60);
+    --secondary: oklch(0.945 0.03 50);
+    --secondary-foreground: oklch(0.3 0.05 38);
+    --muted: oklch(0.955 0.012 60);
+    --muted-foreground: oklch(0.48 0.03 45);
+    --accent: oklch(0.95 0.022 55);
+    --accent-foreground: oklch(0.24 0.025 40);
+    --destructive: oklch(0.52 0.2 22);
+    --border: oklch(0.89 0.02 55);
+    --input: oklch(0.84 0.03 50);
+    --ring: oklch(0.62 0.15 37);
+    --radius: 0.5rem;
+
+    /* The slip: shell, login and the pending-changes strip. */
+    --slip: oklch(0.935 0.04 48);
+    --slip-line: oklch(0.85 0.07 44);
+    --slip-ink: oklch(0.5 0.16 36);
+    /* Row and result states. */
+    --row-new: oklch(0.965 0.035 150);
+    --row-modified: oklch(0.962 0.04 70);
+    --success: oklch(0.48 0.11 150);
+    --success-soft: oklch(0.955 0.04 150);
+
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    color-scheme: light;
+    scrollbar-color: var(--slip-line) transparent;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    caret-color: var(--primary);
+  }
+  ::selection {
+    background: var(--slip-line);
+    color: var(--foreground);
+  }
+  button:not(:disabled), [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+}
+
+/* Perforation: the cut line between what is recorded and what is still to be submitted. */
+@utility perforation-x {
+  background-image: linear-gradient(to right, var(--slip-ink) 55%, transparent 0);
+  background-size: 9px 1.5px;
+  background-repeat: repeat-x;
+}
+@utility perforation-y {
+  background-image: linear-gradient(to bottom, var(--slip-ink) 55%, transparent 0);
+  background-size: 1.5px 9px;
+  background-repeat: repeat-y;
+}
+
+/* Totals in a Jahresrechnung are double-underlined. */
+@utility double-rule {
+  border-bottom: 3px double currentColor;
+}
+
+/* Paper lifted off the desk: one elevation, no border. */
+@utility surface {
+  box-shadow:
+    0 0 0 1px oklch(0.45 0.05 45 / 0.07),
+    0 1px 2px oklch(0.4 0.05 40 / 0.06),
+    0 8px 24px -8px oklch(0.4 0.05 40 / 0.12);
+}
+
+/* Easter eggs: a pixel figure that dances on hidden triggers (components/easter-egg.tsx). Places last 4 s. */
+.ee-stroll {
+  left: 0;
+  bottom: 1rem;
+  animation: ee-stroll 4s linear forwards;
+}
+.ee-rise {
+  left: 50%;
+  bottom: 0;
+  translate: -50% 0;
+  animation: ee-rise 4s ease-out forwards;
+}
+.ee-login {
+  right: 2rem;
+  top: 50%;
+  translate: 0 -50%;
+  animation: ee-login 4s ease-out forwards;
+}
+@keyframes ee-stroll {
+  from { translate: -100% 0; }
+  to { translate: 100vw 0; }
+}
+@keyframes ee-rise {
+  0%, 100% { translate: -50% 110%; }
+  12%, 88% { translate: -50% 0; }
+}
+@keyframes ee-login {
+  0%, 100% { translate: calc(100% + 2rem) -50%; opacity: 0; }
+  10%, 90% { translate: 0 -50%; opacity: 1; }
+}
+
+/* Frame-by-frame dance: each frame is visible for its share of the cycle (delays set inline). */
+.ee-frame {
+  animation-timing-function: steps(1, end);
+  animation-iteration-count: infinite;
+}
+.ee-still { display: none; }
+@keyframes ee-frame-4 {
+  0% { opacity: 1; }
+  25%, 100% { opacity: 0; }
+}
+@keyframes ee-frame-2 {
+  0% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* 6-7 caption: each number jumps while its hand is up. */
+.ee-six, .ee-seven { animation: ee-pop 0.6s steps(1, end) infinite; }
+.ee-seven { animation-delay: -0.3s; }
+@keyframes ee-pop {
+  0% { translate: 0 -4px; scale: 1.3; }
+  50%, 100% { translate: 0 0; scale: 1; }
+}
+
+/* Reduced motion: the figure just stands there and waves. */
+@media (prefers-reduced-motion: reduce) {
+  .ee-place, .ee-six, .ee-seven { animation: none !important; }
+  .ee-stroll { left: 1.5rem; }
+  .ee-frame { display: none; }
+  .ee-still { display: inline; }
+}
